@@ -1,8 +1,8 @@
 {
+  "homepage": "https://darkscarletorchid.github.io/quadtree/",
   "name": "quadtree-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://darkscarletorchid.github.io/quadtree",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@reduxjs/toolkit": "^1.4.0",
