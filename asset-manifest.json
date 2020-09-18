@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/quadtree/static/css/main.cdf6e972.chunk.css",
+    "main.js": "/quadtree/static/js/main.2068d169.chunk.js",
+    "main.js.map": "/quadtree/static/js/main.2068d169.chunk.js.map",
+    "runtime-main.js": "/quadtree/static/js/runtime-main.429ff2ed.js",
+    "runtime-main.js.map": "/quadtree/static/js/runtime-main.429ff2ed.js.map",
+    "static/js/2.7b2780c3.chunk.js": "/quadtree/static/js/2.7b2780c3.chunk.js",
+    "static/js/2.7b2780c3.chunk.js.map": "/quadtree/static/js/2.7b2780c3.chunk.js.map",
+    "index.html": "/quadtree/index.html",
+    "precache-manifest.a538a4d1939653476330d72317bfb7ad.js": "/quadtree/precache-manifest.a538a4d1939653476330d72317bfb7ad.js",
+    "service-worker.js": "/quadtree/service-worker.js",
+    "static/css/main.cdf6e972.chunk.css.map": "/quadtree/static/css/main.cdf6e972.chunk.css.map",
+    "static/js/2.7b2780c3.chunk.js.LICENSE.txt": "/quadtree/static/js/2.7b2780c3.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.429ff2ed.js",
+    "static/js/2.7b2780c3.chunk.js",
+    "static/css/main.cdf6e972.chunk.css",
+    "static/js/main.2068d169.chunk.js"
+  ]
+}
