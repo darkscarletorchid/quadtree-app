@@ -2,56 +2,33 @@ import Rectangle from './Rectangle';
 
 class Quadtree {
 
-    constructor(level, maxLevels = 0, bounds = null,  colorList = [], parent = null) {
+    constructor(level, maxLevels = 0, bounds = null,  color = null) {
         this.level = level;
 
-        function getRandomInt(min, max) {
-            min = Math.ceil(min);
-            max = Math.floor(max);
-            return Math.floor(Math.random() * (max - min)) + min; 
-        }
+        
 
-        this.color = colorList[getRandomInt(0, colorList.length)];
+        this.color = color;
         this.maxLevels = maxLevels;
         this.bounds = bounds;
-
-        this.parent = parent;
 
         this.highlighted = false;
 
         this.children = [];
 
-        this.colorList = colorList
-
     }
-
-    split() {
-        if (this.children.length !== 0 || this.level === this.maxLevels) return;
-        const size = this.bounds.size / 2;
-        const x = this.bounds.x;
-        const y = this.bounds.y;
-
-        this.color = null;
-       
-        this.children[0] = new Quadtree(this.level + 1, this.maxLevels, new Rectangle(x + size, y, size       ), this.colorList, this);
-        this.children[1] = new Quadtree(this.level + 1, this.maxLevels, new Rectangle(x, y, size              ), this.colorList, this);
-        this.children[2] = new Quadtree(this.level + 1, this.maxLevels, new Rectangle(x, y + size, size       ), this.colorList, this);
-        this.children[3] = new Quadtree(this.level + 1, this.maxLevels, new Rectangle(x + size, y + size, size), this.colorList, this);
-    }
-
     smash() {
-        if (this.level === 0 || this.level === this.maxLevels) return;
+        if (this.level === 0 || this.level === this.maxLevels) return false;
         const size = this.bounds.size / 2;
         const x = this.bounds.x;
         const y = this.bounds.y;
 
         this.color = null;
        
-        this.children[0] = new Quadtree(this.level + 1, this.maxLevels, new Rectangle(x + size, y, size       ), this.colorList, this);
-        this.children[1] = new Quadtree(this.level + 1, this.maxLevels, new Rectangle(x, y, size              ), this.colorList, this);
-        this.children[2] = new Quadtree(this.level + 1, this.maxLevels, new Rectangle(x, y + size, size       ), this.colorList, this);
-        this.children[3] = new Quadtree(this.level + 1, this.maxLevels, new Rectangle(x + size, y + size, size), this.colorList, this);
-
+        this.children[0] = new Quadtree(this.level + 1, this.maxLevels, new Rectangle(x + size, y, size       ));
+        this.children[1] = new Quadtree(this.level + 1, this.maxLevels, new Rectangle(x, y, size              ));
+        this.children[2] = new Quadtree(this.level + 1, this.maxLevels, new Rectangle(x, y + size, size       ));
+        this.children[3] = new Quadtree(this.level + 1, this.maxLevels, new Rectangle(x + size, y + size, size));
+        return true;
     }
 
     swap(direction) {

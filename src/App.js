@@ -15,7 +15,12 @@ function App() {
   const [maxLevel, setMaxLevel] = useState(5)
   const [selectedLevel, setSelectedLevel] = useState(0)
   const [root, setRoot] = useState(null);
-  
+  const colorList = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00"];
+  const getRandomInt = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; 
+  }
   const draw = (drawingParams) => {
     const canvas = document.getElementById('canvas');
     var ctx = canvas.getContext("2d");
@@ -47,11 +52,19 @@ function App() {
           variant="contained" 
           color="primary" 
           onClick={()=> {
-            let root = new Quadtree(0, maxLevel, new Rectangle(0, 0, 400), ["#FF0000", "#00FF00", "#0000FF", "#FFFF00"]);
+           
+            const root = new Quadtree(0, maxLevel, new Rectangle(0, 0, 400), colorList[getRandomInt(0, colorList.length)]);
             setRoot(root);
             const generateRandomTree = function(level, node) {
                     if (level > 0) {
-                      node.split();
+                      const size = node.bounds.size / 2;
+                      const x = node.bounds.x;
+                      const y = node.bounds.y;
+                      node.children[0] = new Quadtree(node.level + 1, node.maxLevels, new Rectangle(x + size, y, size       ), colorList[getRandomInt(0, colorList.length)]);
+                      node.children[1] = new Quadtree(node.level + 1, node.maxLevels, new Rectangle(x, y, size              ), colorList[getRandomInt(0, colorList.length)]);
+                      node.children[2] = new Quadtree(node.level + 1, node.maxLevels, new Rectangle(x, y + size, size       ), colorList[getRandomInt(0, colorList.length)]);
+                      node.children[3] = new Quadtree(node.level + 1, node.maxLevels, new Rectangle(x + size, y + size, size), colorList[getRandomInt(0, colorList.length)]);
+              
                       node.children.forEach( node => {
                         if (Math.random() >= 0.5) {
                           generateRandomTree(level - 1, node);
@@ -174,6 +187,9 @@ function App() {
               return;
             }
             selected.smash();
+            selected.children.forEach((child) => {
+              child.color = colorList[getRandomInt(0, colorList.length)];
+            })
             draw(root.getDrawingParams());
           }}>
             Smash 
