@@ -186,11 +186,13 @@ function App() {
             if (selected == null) {
               return;
             }
-            selected.smash();
-            selected.children.forEach((child) => {
-              child.color = colorList[getRandomInt(0, colorList.length)];
-            })
+            if (selected.smash()) {
+              selected.children.forEach((child) => {
+                child.color = colorList[getRandomInt(0, colorList.length)];
+              })
             draw(root.getDrawingParams());
+            }
+            
           }}>
             Smash 
           </Button>
