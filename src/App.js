@@ -1,56 +1,54 @@
 import './App.css';
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Grid from '@material-ui/core/Grid';
-import { Container } from '@material-ui/core';
 import Quadtree from './models/Quadtree';
 import Rectangle from './models/Rectangle';
-import PropTypes from 'prop-types'
 
-
-const draw = (drawingParams) => {
-  const canvas = document.getElementById('canvas');
-  var ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  drawingParams.forEach((el) => {
-    let bounds = el.bounds;
-    ctx.beginPath();
-
-    ctx.rect(bounds.x, bounds.y, bounds.size, bounds.size);
-    if (el.fill) {
-      ctx.fillStyle = el.fill;
-      ctx.fill();
-    }
-    if (el.stroke) {
-      ctx.strokeStyle = el.stroke.color;
-      ctx.lineWidth = el.stroke.width;
-      ctx.stroke();
-    }
-    ctx.closePath();
-  });
-}
-
-let root = null;
 let selected = null;
-let maxLevel = 5;
-let selectedLevel = 0;
 
-function App({gameGenerated}) {
+function App() {
+
+  const [gameInit, setGameInit] = useState(false)
+  const [maxLevel, setMaxLevel] = useState(5)
+  const [selectedLevel, setSelectedLevel] = useState(0)
+  const [root, setRoot] = useState(null);
+  
+  const draw = (drawingParams) => {
+    const canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+    drawingParams.forEach((el) => {
+      let bounds = el.bounds;
+      ctx.beginPath();
+  
+      ctx.rect(bounds.x, bounds.y, bounds.size, bounds.size);
+      if (el.fill) {
+        ctx.fillStyle = el.fill;
+        ctx.fill();
+      }
+      if (el.stroke) {
+        ctx.strokeStyle = el.stroke.color;
+        ctx.lineWidth = el.stroke.width;
+        ctx.stroke();
+      }
+      ctx.closePath();
+    });
+  }
 
   return (
     <div className="App">
-      <Container maxWidth="sm">
+      <div className="TopPanel">
         <Button 
+          style={{marginBottom: '2em'}}
           variant="contained" 
           color="primary" 
           onClick={()=> {
-            root = new Quadtree(0, maxLevel, new Rectangle(0, 0, 400), ["#FF0000", "#00FF00", "#0000FF", "#FFFF00"]);
-
+            let root = new Quadtree(0, maxLevel, new Rectangle(0, 0, 400), ["#FF0000", "#00FF00", "#0000FF", "#FFFF00"]);
+            setRoot(root);
             const generateRandomTree = function(level, node) {
                     if (level > 0) {
                       node.split();
@@ -65,53 +63,56 @@ function App({gameGenerated}) {
             generateRandomTree(maxLevel, root);
 
             draw(root.getDrawingParams())
-            gameGenerated = true;
+            setGameInit(true);
             }}>
-            
             New Game
           </Button>
         <Typography id="select-max-level" gutterBottom>
           Max level
         </Typography>
         <Slider
+          color="primary"
           defaultValue={5}
           aria-labelledby="select-max-level"
           step={1}
           marks
           min={1}
           max={9}
-          valueLabelDisplay="on"
+          valueLabelDisplay="auto"
           onChange={(e, val)=>{
-            maxLevel = val;
+            setMaxLevel(val);
           }}
-        />
-
+        /></div>
+      <div className="Content">
         <div id="scene"> 
-            <canvas 
-            id="canvas" 
-            width="400" 
-            height="400"
-            style={{backgroundColor: "whitesmoke"}}
-            onClick={(e) => {
-                if (!root) {
-                  return
-                }
-                let rect = e.currentTarget.getBoundingClientRect();
-                let x = e.clientX - rect.left;
-                let y = e.clientY - rect.top;
-                if (selected) {
-                  selected.highlighted = false;
-                }
-                selected = root.getSelectedRectangle(x, y, selectedLevel);
-                selected.highlighted = true;
-                draw(root.getDrawingParams());
-            }}></canvas>
-          </div>
+        <canvas 
+        id="canvas" 
+        width="400" 
+        height="400"
+        style={{backgroundColor: "whitesmoke"}}
+        onClick={(e) => {
+            if (!root) {
+              return
+            }
+            let rect = e.currentTarget.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+            if (selected) {
+              selected.highlighted = false;
+            }
+            selected = root.getSelectedRectangle(x, y, selectedLevel);
+            selected.highlighted = true;
+            draw(root.getDrawingParams());
+        }}></canvas>
+      </div>
+        { gameInit && (
+            <div className="ControlsContainer">
+              
        <Typography id="select-action-level" gutterBottom>
           Select level
         </Typography>
         <Slider
-          defaultValue={5}
+          defaultValue={0}
           aria-labelledby="select-action-level"
           step={1}
           marks
@@ -119,11 +120,11 @@ function App({gameGenerated}) {
           max={maxLevel}
           valueLabelDisplay="on"
           onChange={(e, val)=>{
-            selectedLevel = val;
+            setSelectedLevel(val);
           }}
         />
 
-        <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group">
+        <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group"  style={{marginBottom: '2em'}}>
           <Button 
           onClick={()=>{
             if (selected == null) {
@@ -146,7 +147,7 @@ function App({gameGenerated}) {
           </Button>
         </ButtonGroup>
         
-        <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group">
+        <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group"  style={{marginBottom: '2em'}}>
           <Button onClick={()=>{
             if (selected == null) {
               return;
@@ -167,7 +168,7 @@ function App({gameGenerated}) {
           </Button>
         </ButtonGroup>
 
-        <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group">
+        <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group"  style={{marginBottom: '2em'}}>
           <Button onClick={()=>{
             if (selected == null) {
               return;
@@ -179,12 +180,12 @@ function App({gameGenerated}) {
           </Button>
          
         </ButtonGroup>
-        </Container>
+            </div>
+          )
+        }
+       </div>
     </div>
   );
 }
 
-App.propTypes = {
-  gameGenerated: PropTypes.bool
-}
 export default App;
